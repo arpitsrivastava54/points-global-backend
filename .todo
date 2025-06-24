@@ -1,0 +1,2 @@
+- there reset model is already created but i am not using it now (it will use later for improving reset password functionality because there is one catch if some one reset password with particular token and it can be do it again with that same token that's why we need to use separate reset model for this , because after once reset the password we will delete of all records from that model of that user)
+
