@@ -1,5 +1,7 @@
 // src/models/Submission.ts
 import mongoose, { Schema, Document } from 'mongoose';
+import Evaluation from './evaluation.model';
+import { EvaluationStatus } from '../types/enums';
 
 export interface ISubmission extends Document {
   organizationId: mongoose.Types.ObjectId;
@@ -24,4 +26,13 @@ const SubmissionSchema: Schema = new Schema({
   timestamps: true,
 });
 
-export default mongoose.model<ISubmission>('Submission', SubmissionSchema);
+SubmissionSchema.post('save', async function (doc, next) {
+  await Evaluation.create({
+    submissionId: doc._id,
+  });
+  next();
+});
+
+const Submission = mongoose.model<ISubmission>('Submission', SubmissionSchema);
+
+export default Submission;

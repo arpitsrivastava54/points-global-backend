@@ -19,7 +19,19 @@ export const config = {
     },
     from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
   },
+
+  aws: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION,
+    bucket: process.env.AWS_S3_BUCKET,
+  },
+
+  gemini: {
+    apiKey: process.env.GEMINI_API_KEY || '',
+  },
   
+  redisUrl: process.env.REDIS_URL || 'redis://localhost:6379',
   baseUrl: process.env.BASE_URL || 'http://localhost:5000',
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
 };

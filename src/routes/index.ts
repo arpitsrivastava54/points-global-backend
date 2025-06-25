@@ -7,6 +7,7 @@ import subscriptionRoutes from './subscription.route';
 import evaluationRoutes from './evaluation.route';
 import tokenRoutes from './token.route';
 import userOrganizationRoutes from './userorganization.route'
+import planRoutes from './plan.route';
 
 const router = Router();
 
@@ -14,6 +15,7 @@ router.use('/auth', authRoutes);
 router.use('/organizations', orgRoutes);
 router.use('/userorganizations', userOrganizationRoutes);
 router.use('/invitations', inviteRoutes);
+router.use('/plans', planRoutes);
 router.use('/subscriptions', subscriptionRoutes);
 router.use('/evaluations', evaluationRoutes);
 router.use('/tokens', tokenRoutes);

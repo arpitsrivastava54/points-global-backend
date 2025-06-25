@@ -1,4 +1,7 @@
 node_modules
+public/evaluations
+dist
+
 .env
 .env.local
 .env.development.local
