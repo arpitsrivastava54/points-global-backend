@@ -1,7 +1,5 @@
-// src/models/Submission.ts
 import mongoose, { Schema, Document } from 'mongoose';
-import Evaluation from './evaluation.model';
-import { EvaluationStatus } from '../types/enums';
+import { EvaluationStatus, EvaluationType, QuestionPaperType } from '../types/enums';
 
 export interface ISubmission extends Document {
   organizationId: mongoose.Types.ObjectId;
@@ -9,9 +7,9 @@ export interface ISubmission extends Document {
   studentName: string;
   email?: string;
   rollNo: string;
-  questionPaperType: 'QP' | 'QPA' | 'QPM' | 'AFR' | 'AMO' | 'AMP' | 'MS';
   fileUrl: string;
-  createdAt: Date;
+  status: EvaluationStatus;
+  evaluationType: EvaluationType;
 }
 
 const SubmissionSchema: Schema = new Schema({
@@ -20,17 +18,11 @@ const SubmissionSchema: Schema = new Schema({
   studentName: { type: String, required: true },
   email: { type: String },
   rollNo: { type: String, required: true },
-  questionPaperType: { type: String, enum: ['QP', 'QPA', 'QPM', 'AFR', 'AMO', 'AMP', 'MS'], required: true },
-  fileUrl: { type: String, required: true },
+  evaluationType: { type: String, enum: EvaluationType, required: true },
+  files: [{ type: String, required: true }],
+  status: { type: String, enum: EvaluationStatus, default: EvaluationStatus.Pending },
 }, {
   timestamps: true,
-});
-
-SubmissionSchema.post('save', async function (doc, next) {
-  await Evaluation.create({
-    submissionId: doc._id,
-  });
-  next();
 });
 
 const Submission = mongoose.model<ISubmission>('Submission', SubmissionSchema);

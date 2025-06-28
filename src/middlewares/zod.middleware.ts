@@ -3,6 +3,7 @@ import { ZodError, ZodType } from "zod";
 
 export const zodMiddleware = (schema: ZodType<any>) => {
   return (req: Request, res: Response, next: NextFunction) => {
+    console.log("req.body ==> ", req.body);
     try {
       req.body = schema.parse(req.body);
       next();

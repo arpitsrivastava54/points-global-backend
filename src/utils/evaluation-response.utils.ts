@@ -10,9 +10,17 @@ export interface EvaluationApiResponse {
   table: EvaluationTableRow[];
   overallImpression: string;
   generalFeedback: string[];
+  metadata: {
+    tokensUsed: number;
+    model: string;
+    files: {
+      uri: string | undefined;
+      mimeType: string | undefined;
+    }[];
+  }
 } 
 
-export function convertToEvaluationResponse(responseData: string): EvaluationApiResponse {
+export function convertToEvaluationResponse(responseData: string): Omit<EvaluationApiResponse, 'metadata'> {
   try {
     // Extract JSON data from the response string
     const jsonMatch = responseData.match(/\{[\s\S]*\}/);

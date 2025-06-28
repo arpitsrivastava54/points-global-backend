@@ -15,7 +15,7 @@ export const uploadToS3 = async (file: any, key: string) => {
     ContentType: file.mimetype,
   };
   const { Location } = await s3.upload(params).promise();
-  return Location;
+  return {Location};
 };
 
 export const downloadFromS3 = async (key: string) => {

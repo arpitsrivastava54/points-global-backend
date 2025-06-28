@@ -1,17 +1,17 @@
 import { Multer } from 'multer';
 import { Response as ExpressResponse } from 'express';
+import { EvaluationType } from './enums';
 
 export interface IAuthRequest extends Request {
   user?: { userId: string; role: 'Member' | 'Owner' };
 }
 
-
 export interface IEvaluationData {
   studentName: string;
   email?: string;
   rollNo: string;
-  questionPaperType: 'QP' | 'QPA' | 'QPM' | 'AFR' | 'AMO' | 'AMP' | 'MS';
-  file: Express.Multer.File;
+  evaluationType: EvaluationType;
+  files: Express.Multer.File[];
 }
 
 export interface IGeminiResponse {

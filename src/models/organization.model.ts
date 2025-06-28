@@ -5,15 +5,15 @@ import { OrgUserRole } from '../types/enums';
 export interface IOrganization extends Document {
   name: string;
   ownerId: mongoose.Types.ObjectId;
-  tokens: number;
+  subscription: mongoose.Types.ObjectId;
 }
 
 const OrganizationSchema: Schema = new Schema<IOrganization>({
   name: { type: String, required: true },
   ownerId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  tokens: { type: Number, default: 0 },
+  subscription: { type: Schema.Types.ObjectId, ref: 'Subscription' },
 }, {
- timestamps: true,
+  timestamps: true,
 });
 
 

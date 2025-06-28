@@ -10,24 +10,41 @@ const ai = new GoogleGenAI({
   apiKey: config.gemini.apiKey || 'AIzaSyBsXss656hnvhlLtKpLoWWIEc0vf-TDzic',
 });
 
+interface FileData {
+  label: string;
+  fileUrl: string;
+  mimeType?: string;
+}
+
 export async function evaluationWithGemini(
-  evaluationType: EvaluationType,
-  files: string[]
+  fileUrl: string, 
+  evaluationType: EvaluationType = EvaluationType.QPA,
+  additionalFiles?: FileData[]
 ): Promise<EvaluationApiResponse | null> {
   try {
     console.log(`Starting evaluation for type: ${evaluationType}`);
+    
+    // Prepare all files for upload
+    const filesToUpload: FileData[] = [
+      { label: evaluationType.split('_')[0], fileUrl, mimeType: 'application/pdf' }
+    ];
+    
+    if (additionalFiles) {
+      filesToUpload.push(...additionalFiles);
+    }
 
     // Upload all files to Gemini
     const uploadedFiles = await Promise.all(
-      files.map(async (file) => {
-        const answerFile = await fetch(file);
+      filesToUpload.map(async (fileData) => {
+        const answerFile = await fetch(fileData.fileUrl);
         const answerBlob = await answerFile.blob();
-
-        const uploaded = await ai.files.upload({
+        
+        const uploaded = await ai.files.upload({ 
           file: answerBlob
         });
-
+        
         return {
+          label: fileData.label,
           uri: uploaded.uri,
           mimeType: uploaded.mimeType,
         };
@@ -39,18 +56,14 @@ export async function evaluationWithGemini(
     // Prepare the prompt using helper functions
     const basePrompt = getBasePrompt(evaluationType);
     const responseType = getResponseType();
-
+    
     const prompt = `${basePrompt}.
     
     - You are given the following files for evaluation:
-      
+      ${uploadedFiles.map(file => `- ${file.label} file: refer to it as "${file.label}" in your evaluation.`).join('\n')}
 
     ${responseType}
     `;
-
-
-    // paste this line in the prompt after the (you are given the following files for evaluation:)
-    // ${uploadedFiles.map(file => `- ${file.label} file: refer to it as "${file.label}" in your evaluation.`).join('\n')}
 
     // Prepare contents for Gemini
     const model = 'gemini-2.0-flash';
@@ -102,8 +115,9 @@ export async function evaluationWithGemini(
       metadata: {
         tokensUsed: response.usageMetadata?.totalTokenCount || 0,
         model: model,
-        files: uploadedFiles,
+        fileUrl: fileUrl,
         evaluationType: evaluationType,
+        additionalFiles: additionalFiles || [],
       }
     }
 
@@ -118,3 +132,9 @@ export async function evaluationWithGemini(
     return null;
   }
 }
+
+// Legacy function for backward compatibility
+export async function evaluationWithGeminiLegacy(url: string): Promise<EvaluationApiResponse | null> {
+  return evaluationWithGemini(url, EvaluationType.QPA);
+}
+

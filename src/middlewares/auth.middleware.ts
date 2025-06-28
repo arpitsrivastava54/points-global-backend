@@ -1,7 +1,7 @@
 // src/middleware/auth.ts
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
 import { ApiError } from '../utils/api.error';
+import { tokensUtils } from '../utils/tokens.utils';
 
 
 declare global {
@@ -20,7 +20,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     const token = req.headers?.authorization?.split(' ')[1];
     if (!token) throw new ApiError(401, 'No token provided');
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string; role: string };
+    const decoded = tokensUtils.verifyToken(token) as { userId: string; role: string };
     req.user = decoded;
     
     next();

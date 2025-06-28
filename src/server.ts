@@ -11,6 +11,7 @@ import { connectDB } from './configs/database';
 import { ApiError } from './utils/api.error';
 import { apiResponse } from './utils/api.response';
 import { config } from './configs/config';
+import { initializeWorker } from './worker/evaluation.worker';
 
 const app: Express = express();
 
@@ -38,6 +39,7 @@ app.use(errorHandler);
 
 const startServer = async () => {
   await connectDB();
+  initializeWorker();
   const PORT = config.port;
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 };
