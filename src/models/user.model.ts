@@ -1,4 +1,3 @@
-// src/models/User.ts
 import mongoose, { Schema, Document } from 'mongoose';
 import { UserRole } from '../types/enums';
 
@@ -17,7 +16,7 @@ const UserSchema: Schema = new Schema<IUser>({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   name: { type: String },
-  role: { type: String, enum: ['Member', 'Owner'], default: UserRole.Member },
+  role: { type: String, enum: [UserRole.Admin,UserRole.User], default: UserRole.User },
   isVerified: { type: Boolean, default: false },
   isActive: { type: Boolean, default: true },
 }, {

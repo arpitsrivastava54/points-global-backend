@@ -12,6 +12,7 @@ import { ApiError } from './utils/api.error';
 import { apiResponse } from './utils/api.response';
 import { config } from './configs/config';
 import { initializeWorker } from './worker/evaluation.worker';
+import { corsConfig } from './configs/cors';
 
 const app: Express = express();
 
@@ -22,7 +23,6 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.get('/api/health', (req, res) => {
-
   apiResponse(res, {
     message: 'Server is running..',
   });

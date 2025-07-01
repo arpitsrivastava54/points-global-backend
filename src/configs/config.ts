@@ -30,6 +30,8 @@ export const config = {
   gemini: {
     apiKey: process.env.GEMINI_API_KEY || '',
   },
+
+  origins: process.env.ALLOWED_ORIGINS?.split(',') || [],
   
   redisUrl: process.env.REDIS_URL || 'redis://localhost:6379',
   baseUrl: process.env.BASE_URL || 'http://localhost:5000',

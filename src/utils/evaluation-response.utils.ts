@@ -56,7 +56,7 @@ export function convertToEvaluationResponse(responseData: string): Omit<Evaluati
         typeof row["Question Part"] === 'string' &&
         typeof row["Student's Answer"] === 'string' &&
         typeof row["Correct Answer"] === 'string' &&
-        typeof row["Evaluation"] === 'string' &&
+        typeof row["Evaluation Feedback"] === 'string' &&
         typeof row["Marks Awarded"] === 'string'
       );
     });

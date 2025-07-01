@@ -41,6 +41,8 @@ export async function evaluationWithGemini(
     const responseType = getResponseType();
 
     const prompt = `${basePrompt}.
+
+    Note : if there is something which you are not able to evaluate | extract text | confusing then , please return the response as "Not Applicable" into that field.
     
     - You are given the following files for evaluation:
       
@@ -82,21 +84,21 @@ export async function evaluationWithGemini(
     // Save raw response to public/evaluations
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const filename = `evaluation-${evaluationType}-${timestamp}.txt`;
-    const responseFileName = `response-${evaluationType}-${timestamp}.json`;
+    const responseFileName = `${evaluationType}.json`;
     const dir = path.join(process.cwd(), 'public', 'evaluations');
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
     const filePath = path.join(dir, "raw-response-" + filename);
     const responseFilePath = path.join(dir, responseFileName);
-    fs.writeFileSync(filePath, JSON.stringify(response, null, 2));
+    // fs.writeFileSync(filePath, JSON.stringify(response, null, 2));
 
     // Parse Gemini response
     const responseText = response.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!responseText) throw new Error("No response text received from Gemini API");
 
     // Convert the response using our utility function
-    const evaluationData = convertToEvaluationResponse(responseText);
+  const evaluationData = convertToEvaluationResponse(responseText);
     const finalResponse = {
       ...evaluationData,
       metadata: {

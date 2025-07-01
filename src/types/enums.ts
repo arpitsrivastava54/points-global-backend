@@ -1,6 +1,6 @@
 export enum UserRole {
-  Member = 'Member', // 
-  Admin = 'Admin', // admin will have create organization permission and can manage all organization
+  User = 'user', // 
+  Admin = 'admin', // admin will have create organization permission and can manage all organization
 }
 
 export enum OrgUserRole {

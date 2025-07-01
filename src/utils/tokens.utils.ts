@@ -1,5 +1,6 @@
 import jwt, { SignOptions } from 'jsonwebtoken';
 import { config } from '../configs/config';
+import { ApiError } from './api.error';
 
 class TokensUtils {
   generateToken = (payload: any, expiresIn: SignOptions['expiresIn']) => {
@@ -7,7 +8,15 @@ class TokensUtils {
   };
 
   verifyToken = (token: string) => {
-    return jwt.verify(token, config.jwtSecret as string);
+    try {
+      return jwt.verify(token, config.jwtSecret as string);
+    } catch (error: any) {
+      if (error.name === 'TokenExpiredError') {
+        throw new ApiError(401, 'Token expired');
+      }
+      
+      throw new ApiError(401, error.message || 'Unauthorized');
+    }
   };
 }
 

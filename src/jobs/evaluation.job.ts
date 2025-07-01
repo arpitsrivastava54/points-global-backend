@@ -19,5 +19,5 @@ console.log("Evaluation queue created ...");
 
 export const addEvaluationJob = async (submissionId: string, files: string[], metadata: any): Promise<void> => {
   console.log("Adding evaluation job for submissionId ==> ", submissionId);
-  await evaluationQueue.add(`EvaluationType-${metadata.evaluationType}`, { submissionId, files, metadata }, { attempts: 3, delay: 1000 * 60 }); // IT WILL PROCESS THE JOB AFTER 1 MINUTE
+  await evaluationQueue.add(`EvaluationType-${metadata.evaluationType}`, { submissionId, files, metadata }, { attempts: 3, delay: 1000 * 10 }); // IT WILL PROCESS THE JOB AFTER 1 MINUTE
 };

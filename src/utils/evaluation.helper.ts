@@ -91,6 +91,7 @@ export function getResponseType() {
   const returnType = `
   Please evaluate the answers and return the result in table format and summary style. The table should have columns: Question Part, Student's Answer, Correct Answer/Commentary, Evaluation, Marks Awarded (Estimate). overall_impression: Overall assessment of the student's performance, general_feedback: General feedback on the student's performance .
 
+  Note : Feedback will be detailed evaluation which students knows what mistake he has done and if there is something which you are not able to evaluate | extract text | confusing then , please return the response as "Not Applicable" into that field.
    return type will be json and structure will be = {
       table: EvaluationTableRow[];
       overallImpression: string;
@@ -101,7 +102,7 @@ export function getResponseType() {
         "Question Part": string;
         "Student's Answer": string;
         "Correct Answer": string;
-        "Evaluation": string;
+        "Evaluation Feedback": string;
         "Marks Awarded": string // obtainedMarks/totalMarks;
       }
   `

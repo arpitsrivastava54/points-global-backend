@@ -47,7 +47,7 @@ class InvitationService {
       user = await userService.createUser(
         email,
         hashedPassword,
-        UserRole.Member,
+        UserRole.User,
         "User",
         true
       );

@@ -28,10 +28,12 @@ class AuthService {
     if (existingUser) throw new ApiError(400, 'User already exists');
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await userService.createUser(email, hashedPassword, role, name );
+    const user = await userService.createUser(email, hashedPassword, role, name);
+
+    console.log("user ==>", user)
 
     if (organizationName) {
-      organizationService.createOrganization(organizationName, user._id as string);
+      await organizationService.createOrganization(organizationName, user._id as string);
     }
 
     // Generate email verification token
@@ -50,7 +52,8 @@ class AuthService {
   login = async (email: string, password: string): Promise<{ token: string; user: IUserDto }> => {
     const user = await userService.getUserByEmail(email)
 
-    if (!user || !user.isVerified) throw new ApiError(401, 'User not found or not verified');
+    if (!user) throw new ApiError(401, 'User not found');
+    if (!user.isVerified) throw new ApiError(401, 'User not verified');
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) throw new Error('Invalid credentials');
@@ -59,9 +62,10 @@ class AuthService {
     return { token, user: toUserDto(user) };
   };
 
-  verifyEmail = async (token: string): Promise<void> => {
+  verifyEmail = async (token: string): Promise<string> => {
     try {
       const { userId } = tokensUtils.verifyToken(token) as { userId: string };
+      console.log("userId ==>", userId)
 
       const user = await userService.getUserById(userId);
       if (!user) {
@@ -73,6 +77,9 @@ class AuthService {
       }
 
       await userService.updateUser(userId, { isVerified: true });
+
+      const loginToken = tokensUtils.generateToken({ userId: user._id, role: user.role }, config.jwtExpiration as any);
+      return loginToken;
     } catch (error) {
       if (error instanceof jwt.JsonWebTokenError) {
         throw new ApiError(400, 'Invalid or expired verification token');

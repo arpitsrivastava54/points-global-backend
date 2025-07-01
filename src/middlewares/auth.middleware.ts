@@ -22,9 +22,9 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
     const decoded = tokensUtils.verifyToken(token) as { userId: string; role: string };
     req.user = decoded;
-    
+
     next();
-  } catch (error) {
-    res.status(401).json({ error: 'Unauthorized' });
+  } catch (error: any) {
+    next(new ApiError(401, error.message || 'Unauthorized'));
   }
 };
